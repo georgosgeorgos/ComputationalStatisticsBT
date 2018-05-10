@@ -1,8 +1,19 @@
-# MCMC
-| georgos
-  
+---
+title: "MCMC"
+author: |
+  | georgos
+output:
+  html_document:
+    keep_md: yes
+    toc: yes
+  pdf_document:
+    toc: yes
+header-includes: \usepackage{graphicx}
+---
 
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 
 1a)  Illustrate the characteristics of the statistical model for dealing with the *Dugong*'s data. Lengths ($Y_i$)  and  ages ($x_i$) of  27 Dugongs have been recorded and the
@@ -46,44 +57,20 @@ $\pi(\alpha)\pi(\beta)\pi(\gamma)\pi(\tau^2)$ and finally
 \frac{b^a}{\Gamma(a)} \tau_2^{(-a-1)} \exp(-\frac{b}{\tau^2})
 \]
 
+```{r ,1c hyperparameters choice}
 
-```r
+
 require(invgamma)
-```
 
-```
-## Loading required package: invgamma
-```
-
-```r
 dugong = read.table("dugong-data.txt",header = TRUE)
 X = dugong$Age
 Y = dugong$Length
 summary(X)
-```
-
-```
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##    1.00    5.00    9.50   10.94   15.00   31.50
-```
-
-```r
 summary(Y)
-```
 
-```
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##   1.770   2.225   2.400   2.334   2.530   2.720
-```
-
-```r
 plot(X, Y, xlab = "Age", ylab = "Length", col = "blue", main = "dugong's data", lwd = 3)
 grid()
-```
 
-![](MCMC_files/figure-html/1c hyperparameters choice-1.png)<!-- -->
-
-```r
 mean_y = mean(Y)
 var_y = var(Y)
 
@@ -106,13 +93,7 @@ dAlpha_normalized = function(x, sigma_alpha){
 curve( dAlpha_normalized(x, 2) ,0,10, xlab = "alpha", ylab = "p(alpha)", col = "blue", lwd = 3)
 grid()
 integrate(function(x) dAlpha_normalized(x,2),lower = -Inf, upper =  +Inf)
-```
 
-```
-## 1 with absolute error < 4.2e-07
-```
-
-```r
 #beta
 dBeta = function(x, sigma_beta){
     
@@ -130,13 +111,7 @@ dBeta_normalized = function(x, sigma_beta){
 curve( dBeta_normalized(x, 2) ,0,10, xlab = "beta", ylab = "p(beta)", col = "darkgreen", lwd = 3)
 grid()
 integrate(function(x) dBeta_normalized(x,2),lower = -Inf, upper =  +Inf)
-```
 
-```
-## 1 with absolute error < 4.2e-07
-```
-
-```r
 #gamma
 dGamma = function(x, min = 0, max = 1){
     
@@ -146,13 +121,7 @@ dGamma = function(x, min = 0, max = 1){
 curve( dGamma(x) ,-1,2, xlab = "gamma", ylab = "p(gamma)", col = "yellow", lwd = 3)
 grid()
 integrate(function(x) dGamma(x),lower = -Inf, upper =  +Inf)
-```
 
-```
-## 1 with absolute error < 4.2e-11
-```
-
-```r
 #tau
 dTau2 = function(x, a, b){
     
@@ -161,19 +130,9 @@ dTau2 = function(x, a, b){
 }
 curve( dTau2(x,2,2) ,0,10, xlab = "tau2", ylab = "p(tau2)", col = "red", lwd = 3)
 grid()
-```
-
-![](MCMC_files/figure-html/1c hyperparameters choice-2.png)<!-- -->
-
-```r
 integrate(function(x) dTau2(x,1,1),lower = 0, upper =  +Inf)
-```
 
-```
-## 1 with absolute error < 5.7e-05
-```
 
-```r
 #sample
 rAlpha = function(n, sigma_alpha){
     
@@ -229,11 +188,7 @@ par(mfrow=c(1,1))
 hist(rAlpha(10000,10), freq = FALSE, col = "green")
 curve(dAlpha(x,10),add = TRUE, col = "red", lwd = 4)
 curve(dAlpha_normalized(x,10),add = TRUE, col = "blue", lwd = 4)
-```
 
-![](MCMC_files/figure-html/1c hyperparameters choice-3.png)<!-- -->
-
-```r
 #####################################################################################
 
 # first idea to choose the hyperparamters
@@ -268,23 +223,7 @@ choose_alpha_beta = function(N, alpha, beta, lower, upper){
 out = choose_alpha_beta(N, alpha, beta, 0, 4)
 # % of elements out of the interval for every combination of alpha and beta
 out
-```
 
-```
-##       [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10]
-##  [1,]    0 0.018 0.029 0.052 0.045 0.066 0.066 0.089 0.069 0.057
-##  [2,]    0 0.000 0.015 0.025 0.030 0.032 0.052 0.044 0.038 0.053
-##  [3,]    0 0.000 0.000 0.010 0.015 0.018 0.033 0.037 0.032 0.040
-##  [4,]    0 0.000 0.000 0.000 0.004 0.011 0.014 0.016 0.026 0.033
-##  [5,]    1 0.983 0.962 0.954 0.947 0.953 0.950 0.950 0.949 0.948
-##  [6,]    1 1.000 0.992 0.981 0.972 0.970 0.963 0.954 0.969 0.966
-##  [7,]    1 1.000 1.000 0.993 0.985 0.973 0.977 0.975 0.962 0.974
-##  [8,]    1 1.000 1.000 1.000 0.994 0.983 0.971 0.976 0.979 0.971
-##  [9,]    1 1.000 1.000 1.000 1.000 0.997 0.990 0.988 0.982 0.980
-## [10,]    1 1.000 1.000 1.000 1.000 1.000 0.993 0.994 0.981 0.981
-```
-
-```r
 # I choose these
 alpha_opt = 3
 beta_opt = 2
@@ -332,21 +271,8 @@ sigma_beta_opt = sigmas[[2]]
 
 # first choice for sigma_alpha and sigma_beta -----> probably to small
 sigma_alpha_opt
-```
-
-```
-## [1] 9
-```
-
-```r
 sigma_beta_opt
-```
 
-```
-## [1] 3
-```
-
-```r
 par(mfrow=c(1,2))
 curve(dAlpha_normalized(x,sigma_alpha_opt),0,10, xlab = "alpha" )
 title(main = "distribution of alpha with 'optimal' hyperparameters")
@@ -354,11 +280,7 @@ grid()
 curve(dBeta_normalized(x,sigma_beta_opt),0,10, xlab = "beta")
 title(main = "distribution of beta with 'optimal' hyperparameters")
 grid()
-```
 
-![](MCMC_files/figure-html/1c hyperparameters choice-4.png)<!-- -->
-
-```r
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 # now we choose parameters a and b
@@ -406,21 +328,8 @@ a_opt = a[ix_out[1,1]]
 b_opt = b[ix_out[1,2]]
 
 a_opt
-```
-
-```
-## [1] 5.8
-```
-
-```r
 b_opt
-```
 
-```
-## [1] 1.2
-```
-
-```r
 curve(dTau2(x,a_opt,b_opt),0,2)
 
 #--------------------------------------------------------------------------------------
@@ -464,14 +373,14 @@ check = function(N,n_iterm,sigma_alpha_opt, sigma_beta_opt, a_opt, b_opt){
     
 }
 check(N, n_iter, sigma_alpha_opt, sigma_beta_opt, a_opt, b_opt)
-```
 
-![](MCMC_files/figure-html/1c hyperparameters choice-5.png)<!-- -->
+
+```
 
 1d)  Compute \underline{numerically}  the maximum likelihood estimate for the vector of parameters of interest $(\alpha , \beta , \gamma , \tau^2)$ and compare it with the Maximum-a-Posteriori estimate
 
+```{r, warning=FALSE , mle_map}
 
-```r
 log_likelihood = function(X,Y,par){
     
     alpha = par[1]
@@ -493,13 +402,7 @@ log_likelihood = function(X,Y,par){
 }
 #likelihood = Vectorize(likelihood_point)
 log_likelihood(X,Y,c(2,2,20,2))
-```
 
-```
-## [1] 0
-```
-
-```r
 choose_mle_optimal = function(){
     
     res = matrix(NA, nrow = 100, ncol = 5)
@@ -543,41 +446,19 @@ mle_optimal = res[1:4]
 mle_optimal_value = res[5]
 
 mle_optimal
-```
-
-```
-## [1] 2.790339595 1.075097056 0.906648258 0.004920718
-```
-
-```r
 mle_optimal_value
-```
 
-```
-## [1] 36.17348
-```
 
-```r
 mle_curve = mu_opt(X, mle_optimal[1], mle_optimal[2], mle_optimal[3])
 par(mfrow=c(1,1))
 plot(X, Y, col = "blue", main = "mle for mu", ylim = c(1.8,3))
 lines(X, mle_curve, col = "red", type = "l", lwd = 2)
 grid()
-```
 
-![](MCMC_files/figure-html/mle_map-1.png)<!-- -->
-
-```r
 #---------------------------------------------------------------
 ##compute posterior
 require(cubature)
-```
 
-```
-## Loading required package: cubature
-```
-
-```r
 prior = function(par,sigma_alpha_opt,sigma_beta_opt,a_opt,b_opt){
     
     alpha = par[1]
@@ -642,21 +523,8 @@ posterior_optimal = res[1:4]
 posterior_optimal_value = res[5]
 
 posterior_optimal
-```
-
-```
-## [1] 2.671011892 1.000012583 0.883565032 0.009961816
-```
-
-```r
 posterior_optimal_value
-```
 
-```
-## [1] 35.2344
-```
-
-```r
 posterior_curve = mu_opt(X, posterior_optimal[1], posterior_optimal[2], posterior_optimal[3])
 
 # plot
@@ -667,24 +535,12 @@ grid()
 title(main = "mle vs map")
 legend('topleft', c("mle_mu", "map_mu") , 
    lty=1, col=c('red','darkgreen'),  cex=.75)
-```
 
-![](MCMC_files/figure-html/mle_map-2.png)<!-- -->
 
-```r
 mle_optimal
-```
-
-```
-## [1] 2.790339595 1.075097056 0.906648258 0.004920718
-```
-
-```r
 posterior_optimal
-```
 
-```
-## [1] 2.671011892 1.000012583 0.883565032 0.009961816
+    
 ```
 
 
@@ -775,8 +631,8 @@ Other problem, that it is not easy to show analytically, it is that we waste a l
   approach with  your conjugate model 
 (verify empirically that  $\theta$ has the desired target distribution $\pi(\theta|x_1,..,x_n)$ 
 
+```{r 2.e implementation A/R with conjugate model}
 
-```r
 n = 100
 Y_ar = 57
 a = 3
@@ -796,34 +652,16 @@ target = function(x,a,b,Y_ar,n){
 # constant
 c = integrate(function(x) target(x,a,b,Y_ar,n), lower = 0, upper = 1,stop.on.error = FALSE)[1]$value
 c
-```
 
-```
-## [1] 0.01754224
-```
-
-```r
 # k min to obtain a bound   ------> use information on likelihood
 k = max(dbinom(Y_ar,n,X_ar)/c)
 k
-```
-
-```
-## [1] 4.581827
-```
-
-```r
 #k = max(target(X_ar,a,b,Y,n)/(c * auxiliary_density(X_ar,a,b)),na.rm = TRUE)
 k = k*(1.1)
 ###########################
 curve(target(x,a,b,Y_ar,n)/c, ylim = c(0,20), col = "blue", lwd = 3)
 curve(auxiliary_density(x,a,b)*k, from = 0, to = 1, ylim = c(0,12),add = TRUE, col = "green", lwd = 3)
 grid()
-```
-
-![](MCMC_files/figure-html/2.e implementation A/R with conjugate model-1.png)<!-- -->
-
-```r
 ########## A/R simple case
 acceptance_rejection_algorithm_conjugate_distro = function(N,a,b,Y,n,k,c){
     
@@ -851,28 +689,21 @@ sample_target = acceptance_rejection_algorithm_conjugate_distro(N,a,b,Y,n,k,c)
 
 # a lot of Rejection samples !!!!
 100 - (length(sample_target)/N)*100
-```
 
-```
-## [1] 80.517
-```
-
-```r
 # empirical distro of the accepted sample for the posterior distro
 hist(sample_target,breaks = 20,freq = FALSE, col = "orchid",border = FALSE)
 # theoretical posterior
 curve(dbeta(x,a+Y_ar,b+n-Y_ar),add = TRUE, col = "blue", lwd = 4)
-```
 
-![](MCMC_files/figure-html/2.e implementation A/R with conjugate model-2.png)<!-- -->
+```
 
 3)  Simulate from a standard Normal distribution using 
 pseudo-random deviates from a standard Cauchy 
 and the A-R algorithm. Write the expression the corresponding  acceptance probability  and evaluate it numerically by MC approximation.
 
 
+```{r normal-cauchy MC estimate}
 
-```r
 X = seq(-10,10,0.01)
 k = dnorm(X,0,1)/dcauchy(X,0,1)
 k = max(k)
@@ -880,11 +711,7 @@ k = k * (1.1)
 
 curve(dnorm(x,0,1), -10, 10, col = "green", lwd = 2)
 curve(dcauchy(x, location = 0, scale = 1) * k, -10, 10, add = TRUE, col = "red")
-```
 
-![](MCMC_files/figure-html/normal-cauchy MC estimate-1.png)<!-- -->
-
-```r
 N = 10000
 auxiliary_sample = rcauchy(N,0,1)
 
@@ -897,33 +724,18 @@ acceptance = auxiliary_sample[E_Y == 1]
 
 p_acceptance = length(E_Y[E_Y==1])/length(E_Y)
 p_acceptance
-```
 
-```
-## [1] 0.5975
-```
-
-```r
 hist(acceptance,freq = FALSE, col = "blue", border = FALSE)
 curve(dnorm(x,0,1), -10, 10, col = "red", lwd = 4, add = TRUE)
-```
 
-![](MCMC_files/figure-html/normal-cauchy MC estimate-2.png)<!-- -->
-
-```r
 ########################################################################################
 # MC estimate 
 sample = rcauchy(N,0,1)
 f_y = dnorm(sample,0,1)/( k * dcauchy(sample,0,1))
 I_MC = mean((f_y))
 I_MC
-```
 
-```
-## [1] 0.5970642
-```
 
-```r
 # MC estimate sample
 I_vector = rep(NA,1000)
 for (n in 1:1000){
@@ -950,48 +762,22 @@ grid()
 plot(N_iter,I_estimate_n_iter, type = "l", col = "red",xlim = c(0,1000), main = "running MC estimate")
 grid()
 abline(h = 1/k,col = "blue")
-```
 
-![](MCMC_files/figure-html/normal-cauchy MC estimate-3.png)<!-- -->
-
-```r
 # mean MC estimate
 mean(I_vector)
-```
 
-```
-## [1] 0.5979733
-```
-
-```r
 # finite variance
 sd(I_vector)
-```
 
-```
-## [1] 0.003503627
-```
-
-```r
 # bias of the approximation -------> practically unbiased
 bias = (mean(I_vector) - 1/k)^2
 bias
-```
-
-```
-## [1] 5.586273e-10
-```
-
-```r
 ##########################################################################################
 # theoretical value
 
 p_acceptance_true = 1/k
 p_acceptance_true
-```
 
-```
-## [1] 0.5979497
 ```
 
 
@@ -1009,8 +795,7 @@ with the following transition
 simulate the Markov chain with distribution assigned as above
 for $t=1000$ consecutive times
 
-
-```r
+```{r 4 Markov Chain for sample size 1000}
 # state space
 S = c(1,2,3)
 
@@ -1075,46 +860,9 @@ plot(iteration,distro_t_iteration[,2],type = "l",col = "blue")
 grid()
 plot(iteration,distro_t_iteration[,3],type = "l",col = "blue")
 grid()
-```
-
-![](MCMC_files/figure-html/4 Markov Chain for sample size 1000-1.png)<!-- -->
-
-```r
 # check
 rowSums(distro_t_iteration)
-```
 
-```
-##    [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##   [35] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##   [69] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [103] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [137] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [171] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [205] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [239] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [273] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [307] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [341] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [375] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [409] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [443] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [477] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [511] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [545] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [579] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [613] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [647] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [681] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [715] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [749] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [783] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [817] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [851] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [885] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [919] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [953] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-##  [987] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 ```
 
 
@@ -1122,30 +870,15 @@ rowSums(distro_t_iteration)
 4b)  compute the empirical relative frequency of the two states in
   your simulation
 
-
-```r
+```{r}
 # distro markov chain T_t iteration (with burn-in)
 distro_t_iteration[T_t+1,]
-```
 
-```
-## [1] 0.39 0.32 0.29
-```
-
-```r
 # distro markov chain T_t iteration (with burn-in)
 table(markov_chain)/T_t
-```
-
-```
-## markov_chain
-##     1     2     3 
-## 0.391 0.320 0.290
-```
-
-```r
 #par(mfrow=c(1,1))
 #hist(markov_chain, col = "green", border = FALSE , freq = FALSE)
+
 ```
 
   
@@ -1161,8 +894,7 @@ point.
 In this case, because a Markov Chain has a stationary distribution, we are sampling every sample from the stationary distribution (we assume to have reached the invariant distribution after 1000 states).
 Instead, because in the previous case we consider also the first part of the chain, the distribution that we obtain is different and in general we are not sampling from one stationary unique distribution.
 
-
-```r
+```{r}
 ##################################################################################
 
 chain_simulation = function(transition_matrix, S, start_state, T_t){
@@ -1203,24 +935,13 @@ final_state = final_state_simulation(transition_matrix, S, start_state, T_t, N)
 #length(final_state[final_state==3])/N
 
 table(final_state)/N
-```
 
-```
-## final_state
-##     1     2     3 
-## 0.408 0.304 0.288
-```
 
-```r
 par(mfrow=c(1,1))
 
 barplot(t(cbind(table(markov_chain)/1000,table(final_state)/N)),beside=T,
         col=c("darkgreen","darkred"),main="frequency markov chain(green) vs frequency invariant distro(red)")
-```
 
-![](MCMC_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
-
-```r
 ###################################################################################
 ```
 
@@ -1238,29 +959,13 @@ $$
 
 solving this problem we obtain that the theoretical stationary distribution is
 
+```{r, warning=FALSE}
 
-```r
 transition_matrix
-```
-
-```
-##           [,1]      [,2] [,3]
-## [1,] 0.0000000 0.5000000 0.50
-## [2,] 0.6250000 0.1250000 0.25
-## [3,] 0.6666667 0.3333333 0.00
-```
-
-```r
 res = eigen(t(transition_matrix))
 
 res$vectors[,1]/sum(res$vectors[,1])
-```
 
-```
-## [1] 0.3917526 0.3298969 0.2783505
-```
-
-```r
 v_old = c(0,1,0)
 for (n in 1:N){
     
@@ -1274,19 +979,10 @@ for (n in 1:N){
         v_old = v
     }
 }
-```
 
-```
-## [1] 86
-```
-
-```r
 v
-```
 
-```
-##           [,1]      [,2]      [,3]
-## [1,] 0.3917526 0.3298969 0.2783505
+
 ```
 
 4e)  is it well approximated by the simulated empirical relative
@@ -1300,8 +996,8 @@ $X_0=2$ instead of  $X_0=1$?
 Obviously we obtain in theory the same stationary unique invariant distro.
 In practice the sample size is small and the influence of the starting point is not necessary negligible. The invariant distribution is unique and not dependent form the starting point.
 
+```{r}
 
-```r
 N = 500
 start_state = 2
 final_state = final_state_simulation(transition_matrix, S, start_state, T_t, N)
@@ -1313,12 +1009,6 @@ final_state = final_state_simulation(transition_matrix, S, start_state, T_t, N)
 
 #table(markov_chain[500:T_t])/500
 table(final_state)/N
-```
-
-```
-## final_state
-##     1     2     3 
-## 0.394 0.318 0.288
 ```
 
 
@@ -1376,8 +1066,8 @@ $$
 
 
 
+```{r Alpha, warning=FALSE, eval=FALSE}
 
-```r
 ### compute full-conditionals
 require(cubature)
 
@@ -1457,10 +1147,11 @@ integrate(function(x) postAlpha_analytic_normalized(X,Y, x, beta, gamma,tau2, si
 # check -----> correct
 curve(postAlpha_analytic_normalized(X, Y, x, beta, gamma, tau2, sigma_alpha_opt),0,10)
 curve(postAlpha(X, Y, x, beta, gamma, tau2, sigma_alpha_opt),add = TRUE, col = "blue",type = "o")
+
 ```
 
+```{r Beta, warning=FALSE, eval=FALSE}
 
-```r
 ## Beta
 sigma_beta_opt = 100
 likeBeta = Vectorize(likelihood, vectorize.args = c("beta"))
@@ -1504,10 +1195,11 @@ integrate(function(x) postBeta_analytic_normalized(X,Y, alpha, x, gamma,tau2, si
 
 curve(postBeta_analytic_normalized(X, Y, alpha, x, gamma, tau2, sigma_beta_opt), 0, 20)
 curve(postBeta(X, Y, alpha, x, gamma, tau2, sigma_beta_opt), col = "blue", add = TRUE, type = "o")
+
 ```
 
+```{r Gamma, warning=FALSE, eval=FALSE}
 
-```r
 # in this case it is not possible recognize a functional useful form
 
 likeGamma = Vectorize(likelihood, vectorize.args = c("gamma"))
@@ -1530,10 +1222,12 @@ integrate(function(x) postGamma(X,Y, alpha, beta, x,tau2), 0, 1)
 curve(dGamma(x),xlim = c(0,1), xlab = "gamma", col = "blue", ylab = "Gamma", ylim = c(0,1))
 curve(likeGamma(X, Y, alpha, beta, x, tau2)/max(likeGamma(X, Y, alpha, beta, x, tau2)), add = TRUE, col = "red")
 curve(postGamma(X,Y,alpha,beta,x,tau2)/max(postGamma(X,Y,alpha,beta,x,tau2)),add = TRUE)
+
+
 ```
 
+```{r Tau2, warning=FALSE, eval=FALSE}
 
-```r
 a_opt = 6.6
 b_opt = 0.6
 
@@ -1577,6 +1271,9 @@ integrate(function(x) postTau2_analytic_normalized(X,Y, alpha, beta, gamma,x, a_
 
 curve(postTau2_analytic_normalized(X, Y, alpha, beta, gamma, x, a_opt, b_opt), -10, 10)
 curve(postTau2(X, Y, alpha, beta, gamma, x, a_opt, b_opt), col = "blue", add = TRUE, type = "o")
+
+
+
 ```
 
 5b)  Which distribution can you recognize within standard parametric
@@ -1611,8 +1308,8 @@ $$
 5c)  Using a suitable Metropolis-within-Gibbs algorithm simulate a Markov chain 
 ($T=10000$) to approximate the posterior distribution for the above model
 
+```{r 5.c Metropolis_Gibbs}
 
-```r
 ## Gibbs sampling for the conjugate full conditionals -----> MH for the normal-beta(uniform) model
 
 ## sampling from the full-conditionals we obtain a sample from the posterior joint for the paramters
@@ -1651,13 +1348,7 @@ functional_form = function(gamma, X, Y, alpha, beta, tau2){
 f = Vectorize(functional_form, vectorize.args = c("gamma"))
 
 require(truncnorm)
-```
 
-```
-## Loading required package: truncnorm
-```
-
-```r
 # Metropolis-Hastings within Gibbs-Sampling
 
 MH_GB_sampling_main = function(posterior_joint, X, Y, lower, upper){
@@ -1732,8 +1423,7 @@ MH_GB_sampling_main = function(posterior_joint, X, Y, lower, upper){
 posterior_joint = MH_GB_sampling_main(posterior_joint, X, Y, 0,1)
 ```
 
-
-```r
+```{r, validation}
 #################################################################################
 getmode <- function(v) {
    uniqv <- unique(v)
@@ -1746,11 +1436,7 @@ hist(posterior_joint$beta[5000:T], breaks = 40, freq = FALSE, col = "yellow", bo
 hist(posterior_joint$gamma[5000:T],xlim = c(0,1), 
      freq = FALSE, col = "darkgreen", border = FALSE)
 hist(posterior_joint$tau2[5000:T], breaks = 40, freq = FALSE,col = "blue", border = FALSE)
-```
 
-![](MCMC_files/figure-html/validation-1.png)<!-- -->
-
-```r
 mu_prior = mu_opt(X, mle_optimal[1], mle_optimal[2], mle_optimal[3])
 mu_post_opt = mu_opt(X, posterior_optimal[1], posterior_optimal[2], posterior_optimal[3])
 mu_post_mean = mu_opt(X, mean(posterior_joint$alpha), mean(posterior_joint$beta), mean(posterior_joint$gamma))
@@ -1767,11 +1453,6 @@ lines(X,mu_post_opt, col = "blue", lwd = 2)
 lines(X,mu_post_mean, col = "darkgreen", lwd = 2)
 legend('topleft', c("mu_prior", "mu_post_opt", "mu_post_mean"),
    lty=1, col=c('red', 'blue', 'darkgreen'),  cex=.60)
-```
-
-![](MCMC_files/figure-html/validation-2.png)<!-- -->
-
-```r
 ####################################################################################
 
 ######################################################################################à
@@ -1784,14 +1465,13 @@ acf(posterior_joint$gamma, lag.max = 100)
 grid()
 acf(posterior_joint$tau2, lag.max = 100)
 grid()
-```
 
-![](MCMC_files/figure-html/validation-3.png)<!-- -->
+```
 
 5d)  Show the 4 uni-variate trace-plots of the simulations of each parameter
 
+```{r 5.d univariate_trace_plots}
 
-```r
 par(mfrow=c(2,2))
 plot(posterior_joint$alpha,type = "l", col = "black", ylim = c(1,5))
 grid()
@@ -1805,15 +1485,14 @@ abline(h = mean(posterior_joint$gamma), col = "blue", lwd = 3)
 plot(posterior_joint$tau2,type = "l", col = "black", ylim = c(0,0.2))
 grid()
 abline(h = mean(posterior_joint$tau2), col = "blue", lwd = 3)
-```
 
-![](MCMC_files/figure-html/5.d univariate_trace_plots-1.png)<!-- -->
+```
 
 5e)  Evaluate graphically the behavior of the empirical averages 
 $\hat{I}_t$  with growing $t=1,...,T$
 
+```{r 5.e running_means }
 
-```r
 running_means = data.frame(matrix(NA, nrow = T+1, ncol = 4))
 names(running_means) =  c("alpha", "beta", "gamma", "tau2")
 
@@ -1833,15 +1512,14 @@ plot(running_means$gamma,type = "l",col = "red")
 grid()
 plot(running_means$tau2,type = "l",col = "red")
 grid()
-```
 
-![](MCMC_files/figure-html/5.e running_means-1.png)<!-- -->
+```
 
 5f)  Provide estimates for each parameter together with the
   approximation error and explain how you have evaluated such error
 
+```{r mcmc_error_evaluation}
 
-```r
 ########################################################################################
 par(mfrow=c(2,2))
 t = 1000
@@ -1850,22 +1528,14 @@ plot(density(posterior_joint$alpha[ n : (n + t) ]), main = n, col = "green",
      xlim = c(2.5,3.5),ylim = c(0,3.0))
 abline(v = mean(posterior_joint$alpha[ n : (n + t) ]))
 }
-```
 
-![](MCMC_files/figure-html/mcmc_error_evaluation-1.png)<!-- -->
-
-```r
 par(mfrow=c(2,2))
 for ( n in seq(4000,7500,t)){
 plot(density(posterior_joint$alpha[ n : (n + t) ]), main = n, col = "green",
      xlim = c(2.5,3.5), ylim = c(0,3.0) )
 abline(v = mean(posterior_joint$alpha[ n : (n + t) ]))
 }
-```
 
-![](MCMC_files/figure-html/mcmc_error_evaluation-2.png)<!-- -->
-
-```r
 par(mfrow=c(2,2))
 for ( n in seq(8000,(T-t),t)){
 plot(density(posterior_joint$alpha[ n : (n + t) ]), main = n, col = "green",
@@ -1877,11 +1547,7 @@ plot(density(posterior_joint$alpha[ 1 : t ]), main = 1, col = "green",
      xlim = c(2.5,3.5),ylim = c(0,3.0))
 plot(density(posterior_joint$alpha[ (T-t) : T ]), main = n, col = "green",
      xlim = c(2.5,3.5),ylim = c(0,3.0))
-```
 
-![](MCMC_files/figure-html/mcmc_error_evaluation-3.png)<!-- -->
-
-```r
 ##############################################################################################
 # batch means
  
@@ -1912,133 +1578,36 @@ batch_mean = function(post, batch_size, T){
 }
 
 require(mcmcse)
-```
-
-```
-## Loading required package: mcmcse
-```
-
-```
-## mcmcse: Monte Carlo Standard Errors for MCMC
-## Version 1.3-2 created on 2017-07-03.
-## copyright (c) 2012, James M. Flegal, University of California, Riverside
-##                     John Hughes, University of Colorado, Denver
-##                     Dootika Vats, University of Warwick
-##                     Ning Dai, University of Minnesota
-##  For citation information, type citation("mcmcse").
-##  Type help("mcmcse-package") to get started.
-```
-
-```r
 batch_size = 100
 out = batch_mean(posterior_joint$alpha, batch_size, T)
 CI_alpha = out[[1]]
 standard_error_alpha = out[[2]]
 CI_alpha
-```
-
-```
-## [1] 2.635901 2.645107 2.654312
-```
-
-```r
 standard_error_alpha
-```
-
-```
-## [1] 0.003573859
-```
-
-```r
 mcmcse:: mcse(posterior_joint$alpha)$se
-```
 
-```
-## [1] 0.003587795
-```
-
-```r
 out = batch_mean(posterior_joint$beta, batch_size, T)
 CI_beta = out[[1]]
 standard_error_beta = out[[2]]
 CI_beta
-```
-
-```
-## [1] 1.049763 1.051920 1.054078
-```
-
-```r
 standard_error_beta
-```
-
-```
-## [1] 0.0008375918
-```
-
-```r
 mcmcse:: mcse(posterior_joint$beta)$se
-```
 
-```
-## [1] 0.0008324116
-```
 
-```r
 out = batch_mean(posterior_joint$gamma, batch_size, T)
 CI_gamma = out[[1]]
 standard_error_gamma = out[[2]]
 CI_gamma
-```
-
-```
-## [1] 0.8415103 0.8466457 0.8517811
-```
-
-```r
 standard_error_gamma
-```
-
-```
-## [1] 0.001993693
-```
-
-```r
 mcmcse:: mcse(posterior_joint$gamma)$se
-```
 
-```
-## [1] 0.00200021
-```
-
-```r
 out = batch_mean(posterior_joint$tau2, batch_size, T)
 CI_tau2 = out[[1]]
 standard_error_tau2 = out[[2]]
 CI_tau2
-```
-
-```
-## [1] 0.01008223 0.01017421 0.01026619
-```
-
-```r
 standard_error_tau2
-```
-
-```
-## [1] 3.570922e-05
-```
-
-```r
 mcmcse:: mcse(posterior_joint$tau2)$se
-```
 
-```
-## [1] 3.529138e-05
-```
-
-```r
 #########################################################################################
 ## use sub-sampling and batch means
 
@@ -2061,71 +1630,29 @@ sub_sampling = function(post, jump_size, T){
 
 jump_size = 10
 sub_sampling(posterior_joint$alpha[-1], jump_size, T)
-```
 
-```
-## [1] 2.603864 2.645092 2.686320
-```
-
-```r
 sub_sampling(posterior_joint$beta[-1], jump_size, T)
-```
 
-```
-## [1] 1.043470 1.051918 1.060366
-```
-
-```r
 sub_sampling(posterior_joint$gamma[-1], jump_size, T)
-```
 
-```
-## [1] 0.8238051 0.8466397 0.8694743
-```
-
-```r
 sub_sampling(posterior_joint$tau2[-1], jump_size, T)
-```
 
-```
-## [1] 0.009787592 0.010174739 0.010561885
 ```
 
 5g)  Which parameter has the largest posterior uncertainty? How did
   you measure it?
 
 Tau2 has the biggest posterior uncertainty; I use the relative error to measure this uncertainty respect to the other parameters
+```{r}
 
-```r
 (standard_error_alpha/mean(posterior_joint$alpha))*100
-```
 
-```
-## [1] 0.1351121
-```
-
-```r
 (standard_error_beta/mean(posterior_joint$beta))*100
-```
 
-```
-## [1] 0.07962503
-```
-
-```r
 (standard_error_gamma/mean(posterior_joint$gamma))*100
-```
 
-```
-## [1] 0.2354814
-```
-
-```r
 (standard_error_tau2/mean(posterior_joint$tau2))*100
-```
 
-```
-## [1] 0.3509777
 ```
 
 
@@ -2135,18 +1662,12 @@ Tau2 has the biggest posterior uncertainty; I use the relative error to measure 
   absolute value)?
 
 It is evident that alpha and gamma have the largest correlation.
+```{r}
 
-```r
 # alpha and gamma have the highest correlation
 abs(cor(posterior_joint))
-```
 
-```
-##           alpha      beta     gamma      tau2
-## alpha 1.0000000 0.1095072 0.8359975 0.0485007
-## beta  0.1095072 1.0000000 0.1680690 0.2127668
-## gamma 0.8359975 0.1680690 1.0000000 0.1268139
-## tau2  0.0485007 0.2127668 0.1268139 1.0000000
+
 ```
 
 
@@ -2157,8 +1678,7 @@ distribution of the length
   
 5j)  Provide the prediction of another  dugong with age 30 
 
-
-```r
+```{r}
 ##############################################################################
 
 # I use a MCMC estimate considering only sample points from the invariant distro
@@ -2194,80 +1714,37 @@ points(20,mean(y_obs20),col = "red", lwd = 5)
 points(30,mean(y_obs30),col = "green", lwd = 5)
 legend('topleft', c("prediction x_obs = 20", "prediction x_obs = 30"), 
    lty=1, col=c('red', 'green'),  cex=.75)
-```
 
-![](MCMC_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
-```r
 hist(y_obs20, col = "darkgreen", border = FALSE, freq = FALSE)
-```
-
-![](MCMC_files/figure-html/unnamed-chunk-7-2.png)<!-- -->
-
-```r
 hist(y_obs30, col = "darkred", border = FALSE, freq = FALSE)
-```
 
-![](MCMC_files/figure-html/unnamed-chunk-7-3.png)<!-- -->
+```
 
 
 
 5k)  Which prediction is less precise?
 
 The less precise is the prediction in 30; I evaluate this using again the relative error
+```{r}
 
-```r
 out = batch_mean(y_obs20, batch_size, length(y_obs20))
 CI_obs20 = out[[1]]
 standard_error_obs20 = out[[2]]
 CI_obs20
-```
-
-```
-## [1] 2.596263 2.600582 2.604902
-```
-
-```r
 standard_error_obs20
-```
 
-```
-## [1] 0.00167693
-```
-
-```r
 (standard_error_obs20/mean(y_obs20))*100
-```
 
-```
-## [1] 0.06448286
-```
 
-```r
 out = batch_mean(y_obs30, batch_size, length(y_obs30))
 CI_obs30 = out[[1]]
 standard_error_obs30 = out[[2]]
 CI_obs30
-```
-
-```
-## [1] 2.632487 2.638940 2.645393
-```
-
-```r
 standard_error_obs30
-```
 
-```
-## [1] 0.002505264
-```
-
-```r
 (standard_error_obs30/mean(y_obs30))*100
-```
 
-```
-## [1] 0.09493449
 ```
 
 
