@@ -24,12 +24,12 @@ Let us consider the following prior distributions:
 \tau^2 &\sim&  IG(a,b)) (Inverse Gamma)
 \end{eqnarray*}
 
-The Dugongs data model is a hierarchical non-linear Bayesian model. The model assumes priors distribution for the parameters alpha, beta, gamma and tau2. The first three paramters are part of a non linear function of the data(the Dugongs' age) to build the mean of the target distribution. The target distribution is the distribution of the Dugongs' height: fixed alpha, beta and gamma, this distribution is a Normal centered in mu and with tau2 as variance. The underline joint for the parameters is a four dimensional distribution and we want to apply the Bayesian inference to analyze this model and to make predictions.
+The Dugongs data model is a hierarchical non-linear Bayesian model. The model assumes priors distribution for the parameters alpha, beta, gamma and tau2. The first three parameters are part of a non linear function of the data(the Dugongs' age) to build the mean of the target distribution. The target distribution is the distribution of the Dugongs' height: fixed alpha, beta and gamma, this distribution is a Normal centered in mu and with tau2 as variance. The underline joint for the parameters is a four dimensional distribution and we want to apply the Bayesian inference to analyze this model and to make predictions.
 
 
 1b)  Derive the corresponding likelihood function
 
-In this case, fixed the parameters, $Y_i|\tau^2,\mu_i \sim N(\mu_i, \tau^2)$; so to obtain the corresponding likelihood function we have to compute $L(\theta) = f(y_1,....,y_n|\mu,\tau^2)$; and because the observations are conditionally indipendent and identically distributed we can write
+In this case, fixed the parameters, $Y_i|\tau^2,\mu_i \sim N(\mu_i, \tau^2)$; so to obtain the corresponding likelihood function we have to compute $L(\theta) = f(y_1,....,y_n|\mu,\tau^2)$; and because the observations are conditionally independent and identically distributed we can write
 \[
 L(\theta) = \prod_{i=1}^n f(y_i|\mu_i,\tau^2) = \frac{\tau^{-n}}{(2\pi)^{n/2}}  \exp\{ -\frac{1}{2}\sum_{i=1}^n (y_i - \mu_i)^2 \tau^{-2} \}
 \]
@@ -37,9 +37,9 @@ where $\mu_i = \alpha - \beta \gamma^{x_i}$.
 The likelihood is a function of $\alpha,\beta,\gamma,\tau^2$.
 
 
-1c)  Write down the expression of the joint prior distribution of the parameters at stake and illustrate your suitable choice for the hyperparameters.
+1c)  Write down the expression of the joint prior distribution of the parameters at stake and illustrate your suitable choice for the hyper-parameters.
 
-The joint prior is $\pi(\alpha,\beta,\gamma,\tau^2)$ and because the parameters are reciprocally indipendents we can write
+The joint prior is $\pi(\alpha,\beta,\gamma,\tau^2)$ and because the parameters are reciprocally independents we can write
 $\pi(\alpha)\pi(\beta)\pi(\gamma)\pi(\tau^2)$ and finally
 \[
 \pi(\theta) = \frac{1}{\sqrt{2\pi \sigma_{\alpha}^2}}\exp\{-\frac{1}{2}(\alpha^2\sigma_{\alpha}^{-2})\}  \frac{1}{\sqrt{2\pi \sigma_{\beta}^2}}\exp\{-\frac{1}{2}(\beta^2\sigma_{\beta}^{-2})\} I_{[0,1]} 
@@ -272,16 +272,16 @@ out
 
 ```
 ##       [,1]  [,2]  [,3]  [,4]  [,5]  [,6]  [,7]  [,8]  [,9] [,10]
-##  [1,]    0 0.025 0.023 0.043 0.054 0.062 0.068 0.074 0.085 0.068
-##  [2,]    0 0.000 0.015 0.022 0.025 0.034 0.047 0.041 0.062 0.061
-##  [3,]    0 0.000 0.000 0.013 0.019 0.024 0.021 0.022 0.037 0.041
-##  [4,]    0 0.000 0.000 0.000 0.012 0.012 0.020 0.032 0.025 0.028
-##  [5,]    1 0.983 0.965 0.952 0.947 0.960 0.949 0.936 0.946 0.944
-##  [6,]    1 1.000 0.988 0.973 0.971 0.971 0.961 0.963 0.962 0.962
-##  [7,]    1 1.000 1.000 0.991 0.970 0.980 0.972 0.965 0.974 0.975
-##  [8,]    1 1.000 1.000 1.000 0.992 0.987 0.980 0.969 0.982 0.980
-##  [9,]    1 1.000 1.000 1.000 1.000 0.994 0.990 0.994 0.981 0.980
-## [10,]    1 1.000 1.000 1.000 1.000 1.000 0.995 0.991 0.987 0.983
+##  [1,]    0 0.018 0.029 0.052 0.045 0.066 0.066 0.089 0.069 0.057
+##  [2,]    0 0.000 0.015 0.025 0.030 0.032 0.052 0.044 0.038 0.053
+##  [3,]    0 0.000 0.000 0.010 0.015 0.018 0.033 0.037 0.032 0.040
+##  [4,]    0 0.000 0.000 0.000 0.004 0.011 0.014 0.016 0.026 0.033
+##  [5,]    1 0.983 0.962 0.954 0.947 0.953 0.950 0.950 0.949 0.948
+##  [6,]    1 1.000 0.992 0.981 0.972 0.970 0.963 0.954 0.969 0.966
+##  [7,]    1 1.000 1.000 0.993 0.985 0.973 0.977 0.975 0.962 0.974
+##  [8,]    1 1.000 1.000 1.000 0.994 0.983 0.971 0.976 0.979 0.971
+##  [9,]    1 1.000 1.000 1.000 1.000 0.997 0.990 0.988 0.982 0.980
+## [10,]    1 1.000 1.000 1.000 1.000 1.000 0.993 0.994 0.981 0.981
 ```
 
 ```r
@@ -335,7 +335,7 @@ sigma_alpha_opt
 ```
 
 ```
-## [1] 8
+## [1] 9
 ```
 
 ```r
@@ -409,7 +409,7 @@ a_opt
 ```
 
 ```
-## [1] 7.1
+## [1] 5.8
 ```
 
 ```r
@@ -417,7 +417,7 @@ b_opt
 ```
 
 ```
-## [1] 0.3
+## [1] 1.2
 ```
 
 ```r
@@ -468,7 +468,7 @@ check(N, n_iter, sigma_alpha_opt, sigma_beta_opt, a_opt, b_opt)
 
 ![](MCMC_files/figure-html/1c hyperparameters choice-5.png)<!-- -->
 
-1d)  Compute \underline{numerically}  the maximum likelihood estimate for the vector of parameters of interest $(\alpha , \beta , \gamma , \tau^2)$ and compare it with the Maximum-a-Posterori estimate
+1d)  Compute \underline{numerically}  the maximum likelihood estimate for the vector of parameters of interest $(\alpha , \beta , \gamma , \tau^2)$ and compare it with the Maximum-a-Posteriori estimate
 
 
 ```r
@@ -720,7 +720,7 @@ E | Y = y \sim Bern(p_y) \\
  Y = y | E = 1 \sim f_{target}(y) 
 $$
 
-analitically the acceptance probability can be computed starting from the joint
+analytically the acceptance probability can be computed starting from the joint
 
 $$
  \Pi(E=1) = \int_{y}J(E=1 ,y) = \int_{y} f(E=1|y)f(y) dy = \int_{y} p_y \, q(y) dy = 
@@ -752,7 +752,7 @@ in a lot of cases computing the exact distribution is not relevant and we can us
 2d)  Illustrate analytically possible difficulties of this approach 
 with a simple conjugate model 
 
-The main problem in general is that we need: a prior from which is computationally easy to sample and defined on the same domain of the posterior; and a bounding constant to obtain a dominating function, proportional to the prior, from which to sample. These two conditions are not always trivial to satisfy: infact, for a distribution not concave, it is not easy to obtain a bounding constant because we have to solve an optimization problem with local maxima(in general with a lot of random variables); and we have to search also an easy to sample distro with this property: so we have to deal with a computationally invertible CDF.
+The main problem in general is that we need: a prior from which is computationally easy to sample and defined on the same domain of the posterior; and a bounding constant to obtain a dominating function, proportional to the prior, from which to sample. These two conditions are not always trivial to satisfy: in fact, for a distribution not concave, it is not easy to obtain a bounding constant because we have to solve an optimization problem with local maxima(in general with a lot of random variables); and we have to search also an easy to sample distro with this property: so we have to deal with a computationally invertible CDF.
 So for example, using a simple Beta as prior and a Binomial model as likelihood we know
 
 $$
@@ -761,7 +761,7 @@ Y_n|\theta \sim Bin(n,p) \\
 \theta| Y_n \sim Beta(a_p,b_p)
 $$
 
-and the functional form of this model is a beta with updated hyperparameters. Now to sample from this posterior we should be able to invert the CDF of a Beta function and this is not trivial; infact
+and the functional form of this model is a beta with updated hyper-parameters. Now to sample from this posterior we should be able to invert the CDF of a Beta function and this is not trivial; in fact
 
 $$
 Beta(a,b) = \frac{x^{a-1}(1-x)^{b-1}}{B(a,b)} \\
@@ -769,7 +769,7 @@ F(x) = P(X \le x) = \int_{-\infty}^x Beta(x,a,b) \\
 x = F^{-1}(u)
 $$
 
-Other problem, that it is not easy to show analitically, it is that we waste a lot of prior sample to obtain a small posterior sample. I will show this fact in the nex part. 
+Other problem, that it is not easy to show analytically, it is that we waste a lot of prior sample to obtain a small posterior sample. I will show this fact in the next part. 
 
 2e)  Verify your conclusions implementing the Acceptance-Rejection
   approach with  your conjugate model 
@@ -854,7 +854,7 @@ sample_target = acceptance_rejection_algorithm_conjugate_distro(N,a,b,Y,n,k,c)
 ```
 
 ```
-## [1] 80.226
+## [1] 80.517
 ```
 
 ```r
@@ -900,7 +900,7 @@ p_acceptance
 ```
 
 ```
-## [1] 0.5997
+## [1] 0.5975
 ```
 
 ```r
@@ -920,7 +920,7 @@ I_MC
 ```
 
 ```
-## [1] 0.599329
+## [1] 0.5970642
 ```
 
 ```r
@@ -960,7 +960,7 @@ mean(I_vector)
 ```
 
 ```
-## [1] 0.5980822
+## [1] 0.5979733
 ```
 
 ```r
@@ -969,7 +969,7 @@ sd(I_vector)
 ```
 
 ```
-## [1] 0.00338639
+## [1] 0.003503627
 ```
 
 ```r
@@ -979,7 +979,7 @@ bias
 ```
 
 ```
-## [1] 1.757942e-08
+## [1] 5.586273e-10
 ```
 
 ```r
@@ -1129,7 +1129,7 @@ distro_t_iteration[T_t+1,]
 ```
 
 ```
-## [1] 0.385 0.340 0.275
+## [1] 0.39 0.32 0.29
 ```
 
 ```r
@@ -1140,7 +1140,7 @@ table(markov_chain)/T_t
 ```
 ## markov_chain
 ##     1     2     3 
-## 0.386 0.340 0.275
+## 0.391 0.320 0.290
 ```
 
 ```r
@@ -1208,7 +1208,7 @@ table(final_state)/N
 ```
 ## final_state
 ##     1     2     3 
-## 0.406 0.322 0.272
+## 0.408 0.304 0.288
 ```
 
 ```r
@@ -1318,7 +1318,7 @@ table(final_state)/N
 ```
 ## final_state
 ##     1     2     3 
-## 0.402 0.370 0.228
+## 0.394 0.318 0.288
 ```
 
 
@@ -1349,7 +1349,7 @@ a_{\alpha} = \frac{1}{\sigma_{\alpha}^2} + \frac{n}{\tau^2}\\
 b_{\alpha} = \dfrac{\beta \sum_{i=1}^n \gamma^{x_i} + \sum_{i=1}^n y_i}{\tau^2}
 $$
 
-for beta (proceding in the exact same way)
+for beta (proceeding in the exact same way)
 
 $$
 \pi(\beta|\alpha,\gamma,\tau^2, x,y) \propto L(\beta) \pi(\beta) \\ \propto \exp \left \{ -\frac{1}{2} a_{\beta} \beta^2 + b_{\beta} \beta \right\} \\
@@ -1583,7 +1583,7 @@ curve(postTau2(X, Y, alpha, beta, gamma, x, a_opt, b_opt), col = "blue", add = T
   families
 so that direct simulation from full conditional can be easily implemented ?
 
-For alpha, beta and tau2 it is easy to recognize a conjugate model and retrieve the full conditional from the functional form; infact for alpha and beta we have a normal-normal model, and for tau2 we have a normal-inversgamma model; so the posteriors are known and in particular they are:
+For alpha, beta and tau2 it is easy to recognize a conjugate model and retrieve the full conditional from the functional form; in fact for alpha and beta we have a normal-normal model, and for tau2 we have a normal-inverse-gamma model; so the posteriors are known and in particular they are:
 
 $$
 \alpha_{post} \sim N(\frac{b_\alpha}{a_{\alpha}}, \frac{1}{a_{\alpha}}) \\
@@ -1788,7 +1788,7 @@ grid()
 
 ![](MCMC_files/figure-html/validation-3.png)<!-- -->
 
-5d)  Show the 4 univariate trace-plots of the simulations of each parameter
+5d)  Show the 4 uni-variate trace-plots of the simulations of each parameter
 
 
 ```r
@@ -1809,7 +1809,7 @@ abline(h = mean(posterior_joint$tau2), col = "blue", lwd = 3)
 
 ![](MCMC_files/figure-html/5.d univariate_trace_plots-1.png)<!-- -->
 
-5e)  Evaluate graphically the behaviour of the empirical averages 
+5e)  Evaluate graphically the behavior of the empirical averages 
 $\hat{I}_t$  with growing $t=1,...,T$
 
 
@@ -1938,7 +1938,7 @@ CI_alpha
 ```
 
 ```
-## [1] 2.644084 2.653298 2.662511
+## [1] 2.635901 2.645107 2.654312
 ```
 
 ```r
@@ -1946,7 +1946,7 @@ standard_error_alpha
 ```
 
 ```
-## [1] 0.003576933
+## [1] 0.003573859
 ```
 
 ```r
@@ -1954,7 +1954,7 @@ mcmcse:: mcse(posterior_joint$alpha)$se
 ```
 
 ```
-## [1] 0.003575903
+## [1] 0.003587795
 ```
 
 ```r
@@ -1965,7 +1965,7 @@ CI_beta
 ```
 
 ```
-## [1] 1.048612 1.050633 1.052654
+## [1] 1.049763 1.051920 1.054078
 ```
 
 ```r
@@ -1973,7 +1973,7 @@ standard_error_beta
 ```
 
 ```
-## [1] 0.000784654
+## [1] 0.0008375918
 ```
 
 ```r
@@ -1981,7 +1981,7 @@ mcmcse:: mcse(posterior_joint$beta)$se
 ```
 
 ```
-## [1] 0.0007916086
+## [1] 0.0008324116
 ```
 
 ```r
@@ -1992,7 +1992,7 @@ CI_gamma
 ```
 
 ```
-## [1] 0.8463000 0.8511331 0.8559663
+## [1] 0.8415103 0.8466457 0.8517811
 ```
 
 ```r
@@ -2000,7 +2000,7 @@ standard_error_gamma
 ```
 
 ```
-## [1] 0.001876345
+## [1] 0.001993693
 ```
 
 ```r
@@ -2008,7 +2008,7 @@ mcmcse:: mcse(posterior_joint$gamma)$se
 ```
 
 ```
-## [1] 0.001874794
+## [1] 0.00200021
 ```
 
 ```r
@@ -2019,7 +2019,7 @@ CI_tau2
 ```
 
 ```
-## [1] 0.01000887 0.01007805 0.01014723
+## [1] 0.01008223 0.01017421 0.01026619
 ```
 
 ```r
@@ -2027,7 +2027,7 @@ standard_error_tau2
 ```
 
 ```
-## [1] 2.68563e-05
+## [1] 3.570922e-05
 ```
 
 ```r
@@ -2035,7 +2035,7 @@ mcmcse:: mcse(posterior_joint$tau2)$se
 ```
 
 ```
-## [1] 2.685502e-05
+## [1] 3.529138e-05
 ```
 
 ```r
@@ -2064,7 +2064,7 @@ sub_sampling(posterior_joint$alpha[-1], jump_size, T)
 ```
 
 ```
-## [1] 2.622147 2.653284 2.684421
+## [1] 2.603864 2.645092 2.686320
 ```
 
 ```r
@@ -2072,7 +2072,7 @@ sub_sampling(posterior_joint$beta[-1], jump_size, T)
 ```
 
 ```
-## [1] 1.042221 1.050631 1.059040
+## [1] 1.043470 1.051918 1.060366
 ```
 
 ```r
@@ -2080,7 +2080,7 @@ sub_sampling(posterior_joint$gamma[-1], jump_size, T)
 ```
 
 ```
-## [1] 0.8329879 0.8511276 0.8692673
+## [1] 0.8238051 0.8466397 0.8694743
 ```
 
 ```r
@@ -2088,7 +2088,7 @@ sub_sampling(posterior_joint$tau2[-1], jump_size, T)
 ```
 
 ```
-## [1] 0.009846448 0.010078564 0.010310680
+## [1] 0.009787592 0.010174739 0.010561885
 ```
 
 5g)  Which parameter has the largest posterior uncertainty? How did
@@ -2101,7 +2101,7 @@ Tau2 has the biggest posterior uncertainty; I use the relative error to measure 
 ```
 
 ```
-## [1] 0.1348108
+## [1] 0.1351121
 ```
 
 ```r
@@ -2109,7 +2109,7 @@ Tau2 has the biggest posterior uncertainty; I use the relative error to measure 
 ```
 
 ```
-## [1] 0.07468393
+## [1] 0.07962503
 ```
 
 ```r
@@ -2117,7 +2117,7 @@ Tau2 has the biggest posterior uncertainty; I use the relative error to measure 
 ```
 
 ```
-## [1] 0.2204525
+## [1] 0.2354814
 ```
 
 ```r
@@ -2125,7 +2125,7 @@ Tau2 has the biggest posterior uncertainty; I use the relative error to measure 
 ```
 
 ```
-## [1] 0.2664831
+## [1] 0.3509777
 ```
 
 
@@ -2142,11 +2142,11 @@ abs(cor(posterior_joint))
 ```
 
 ```
-##             alpha       beta      gamma        tau2
-## alpha 1.000000000 0.19496134 0.84488062 0.001062839
-## beta  0.194961343 1.00000000 0.07103734 0.179002429
-## gamma 0.844880620 0.07103734 1.00000000 0.069904345
-## tau2  0.001062839 0.17900243 0.06990434 1.000000000
+##           alpha      beta     gamma      tau2
+## alpha 1.0000000 0.1095072 0.8359975 0.0485007
+## beta  0.1095072 1.0000000 0.1680690 0.2127668
+## gamma 0.8359975 0.1680690 1.0000000 0.1268139
+## tau2  0.0485007 0.2127668 0.1268139 1.0000000
 ```
 
 
@@ -2224,7 +2224,7 @@ CI_obs20
 ```
 
 ```
-## [1] 2.595877 2.600717 2.605556
+## [1] 2.596263 2.600582 2.604902
 ```
 
 ```r
@@ -2232,7 +2232,7 @@ standard_error_obs20
 ```
 
 ```
-## [1] 0.00187877
+## [1] 0.00167693
 ```
 
 ```r
@@ -2240,7 +2240,7 @@ standard_error_obs20
 ```
 
 ```
-## [1] 0.07224048
+## [1] 0.06448286
 ```
 
 ```r
@@ -2251,7 +2251,7 @@ CI_obs30
 ```
 
 ```
-## [1] 2.634210 2.641078 2.647946
+## [1] 2.632487 2.638940 2.645393
 ```
 
 ```r
@@ -2259,7 +2259,7 @@ standard_error_obs30
 ```
 
 ```
-## [1] 0.002666362
+## [1] 0.002505264
 ```
 
 ```r
@@ -2267,7 +2267,7 @@ standard_error_obs30
 ```
 
 ```
-## [1] 0.1009573
+## [1] 0.09493449
 ```
 
 

@@ -78,7 +78,7 @@ for each of these 11 values of $\theta$
 and plot these probabilities as a function of $\theta$.
 
 When we compute this we obtain a function of $\theta$ given the data:
-in this case a "discrete likelihood", a discrete statistical model choosen to represent the behavior of the phenomenon.
+in this case a "discrete likelihood", a discrete statistical model chosen to represent the behavior of the phenomenon.
 
 ```r
 par(mfrow=c(1,1))
@@ -111,7 +111,7 @@ In this case all the prior are the same and have mass 1 over the cardinality of 
 
 $$\pi(\theta_j) = 1/|\Theta| $$
 
-Obviously this prior has no influence on the posterior distribution and all the information is inside the statistical model choosen for the data. 
+Obviously this prior has no influence on the posterior distribution and all the information is inside the statistical model chosen for the data. 
 
 ```r
 par(mfrow=c(1,3))
@@ -159,7 +159,7 @@ e) As discussed in this chapter, the posterior distribution of $\theta$ is $Beta
 
 What we have seen is a degenerate case where the Beta distribution is equal to the uniform distribution: this is true when the parameters a and b are equal to 1.
 
-It's a particular case of a more general behavior for this two distribution: infact using as model for the data a Binomial and as prior a Beta(a,b) we know, for the theory of conjugacy, that the posterior will be always proportional to the prior and in particular egual to a new Beta(a_post,b_post) with different parameters that contain inside the information given by the data and given by the prior. For this model:
+It's a particular case of a more general behavior for this two distribution: in fact using as model for the data a Binomial and as prior a Beta(a,b) we know, for the theory of conjugacy, that the posterior will be always proportional to the prior and in particular equal to a new Beta(a_post,b_post) with different parameters that contain inside the information given by the data and given by the prior. For this model:
 
 $$a_{posterior} = a_{prior} + s  $$
 $$b_{posterior} = b_{prior} - s + n  $$
@@ -236,7 +236,7 @@ grid()
 
 
 2) Consider a normal statistical model with $X_i \sim N(\theta,\lambda=1/\sigma^2)$ where the precision parameter is known. 
-Use as a prior distribution on the (conditional) mean $\theta$ a Normal with prior mean $\mu$ and prior precison $\nu$. 
+Use as a prior distribution on the (conditional) mean $\theta$ a Normal with prior mean $\mu$ and prior precision $\nu$. 
 
 a) derive the general formula of the prior predictive distribution 
 
@@ -258,7 +258,7 @@ $$ m(x) \sim N(\mu,\frac{\lambda\nu}{\lambda+\nu})$$
 
 b) derive the general formula of the posterior predictive distribution 
 
-In this particular case we know that the posterior distribution of $\theta$, for the theory of normal conjugacy, is a normal with hyperparameters updated
+In this particular case we know that the posterior distribution of $\theta$, for the theory of normal conjugacy, is a normal with hyper-parameters updated
 $$ \theta_{prior} \sim N(\mu,\nu)$$
 $$ X|\theta \sim N(\theta,\lambda)$$
 $$ \theta_{posterior} \sim N(\mu_{*},\nu_{*})$$
@@ -267,15 +267,15 @@ and we can write for the predictive posterior
 
 $$\pi(x^{new}|x) = \int_{\Theta} f(x^{new}|\theta)\pi(\theta|x) d \theta$$
 
-now, because we have again two normals, the posterior predictive can be obtained in the same way of the prior and it will be a normal with appropriate parameters.
+now, because we have again two Normal distributions, the posterior predictive can be obtained in the same way of the prior and it will be a normal with appropriate parameters.
 
 $$X^{new}|\theta \sim N(\theta,\lambda) $$
 $$\theta|X \sim N(\mu_{*},\nu_{*})$$
 
 $$X^{new}|X \sim N(\mu_{*},\frac{\lambda\nu_{*}}{\lambda+\nu_{*}})$$
 
-to explitic this distribution we need obviously to compute the posterior parameter for $\theta_{posterior}$: but now this is not difficult because, having a Normal likelihood
-and a Normal prior the posterior(for $\theta$) will be a Normal. Infact
+to explicit this distribution we need obviously to compute the posterior parameter for $\theta_{posterior}$: but now this is not difficult because, having a Normal likelihood
+and a Normal prior the posterior(for $\theta$) will be a Normal. In fact
 
 $$\pi(\theta|x) = \frac{f(x|\theta)\pi(\theta)}{\int_{\Theta} f(x|\theta)\pi(\theta) d \theta}$$
 
@@ -305,7 +305,7 @@ $$
 $$
 Elicit your prior distribution on the unknown $\theta$ in such a way that your prior mean is 0 and you believe that the unknown theta is in the interval $[-5,5]$ with prior probability 0.96
 
-Choosing a normal for $\theta$ we can use the quantile of a standard normal at 0.96 and it is natural to consider the simmetry of the distribution to compute an interval and derive the variance.
+Choosing a normal for $\theta$ we can use the quantile of a standard normal at 0.96 and it is natural to consider the symmetry of the distribution to compute an interval and derive the variance.
 
 In general, if $\alpha = 1-0.96$, we want this condition
 
@@ -340,7 +340,7 @@ s/length(res)*100
 ```
 
 ```
-## [1] 4.13
+## [1] 4.22
 ```
 
 d) derive your posterior distribution and represent it graphically 
@@ -434,7 +434,7 @@ title("check posterior")
 e) derive your favorite point estimate and interval estimate and motivate your choices
 
 In this case, because the posterior distribution is Normal, we can use the posterior mean(that it is also the MLE, the mode and the median) to evaluate our distribution; and as credibility interval it is natural to use a Normal interval because all is symmetric and we know the posterior precision. 
-In particular the posterior bayesian estimator for the mean is 
+In particular the posterior Bayesian estimator for the mean is 
 
 $$\int_{\Theta} \theta N(\mu_{x},\nu_{x}) d \theta = \mu_{x} $$
 
@@ -506,9 +506,9 @@ consider the following statistical model where $X_i|\theta$ are i.i.d with
 $$
 X_i|\theta \sim f(x|\theta) = \frac{1}{20} I_{[\theta-10,\theta+10](x)}
 $$
-Use the same prior elicitation for $\theta$ as in the model of the previous excercise 
+Use the same prior elicitation for $\theta$ as in the model of the previous exercise 
 
-a) Provide a fully Bayesian analysis for these data explaining all the basic ingredients and steps for carrying it out. In particular,  compare your final inference on the uknown $\theta=E[X|\theta]$ with the one you have derived in the previous point 2) 
+a) Provide a fully Bayesian analysis for these data explaining all the basic ingredients and steps for carrying it out. In particular,  compare your final inference on the unknown $\theta=E[X|\theta]$ with the one you have derived in the previous point 2) 
 
 As before we can derive a posterior distribution for $\theta$ using a statistical model for the data (a Uniform model in this case) and a prior distribution for the random variable associated with the parameter space(Normal as before).
 $$\pi(\theta|x) = \frac{f(x|\theta)\pi(\theta)}{\int_{\Theta} f(x|\theta)\pi(\theta) d \theta}$$
@@ -650,7 +650,7 @@ legend('topleft',c("likelihood","prior","posterior"),lty=c(1,1),lwd=c(2.5,2.5),
 It is possible to observe that, in the Normal model, the empirical evidence is dominant (and unbalanced); instead in the Uniform model the prior influence is substantial and it gives a smaller weight to the data.
 
 
-b) Write the formula of the prior predictive distribution of a single observation and explain how you can simulate i.i.d random drws from it. Use the simulated values to represent approximately the predictive density in a plot and compare it with the prior predictive density of a single observation  of the previous model
+b) Write the formula of the prior predictive distribution of a single observation and explain how you can simulate i.i.d random draws from it. Use the simulated values to represent approximately the predictive density in a plot and compare it with the prior predictive density of a single observation  of the previous model
 
 for a single observation we can write:
 
@@ -682,7 +682,7 @@ integrate((function(x)prior_predictive((x))),-Inf,Inf)
 ```
 ## 1 with absolute error < 9.3e-07
 ```
-now we can use the conditional distribution and the prior for $\theta$ to compute an approximation of this distribution: infact sampling from the distribution of $\theta$ we can fix this value to obtain the conditional distibution $X|\theta$ and now sampling from this distribution we obtain a sample from the prior predictive: repeating this process $N$ times we obtain an approximation of the prior predictive distribution.
+now we can use the conditional distribution and the prior for $\theta$ to compute an approximation of this distribution: in fact sampling from the distribution of $\theta$ we can fix this value to obtain the conditional distribution $X|\theta$ and now sampling from this distribution we obtain a sample from the prior predictive: repeating this process $N$ times we obtain an approximation of the prior predictive distribution.
 
 ```r
 n = 1000
@@ -752,7 +752,7 @@ cat("ratio posterior distribution Uniform/Normal model: ", J_m2_x/J_m1_x)
 ```r
 # model 2 extremely better than model 1 using a Bayesian approach
 ```
-this analysis shows that the second model is extremely better in a Bayesian sense respect to the Normal model: this is clear when we think that the Normal model gives a lot of importance to the sample data also if the sample is extremely small and the sampling distribution has nothing in common with a Normal; instead with a small sample a Uniform distribution is a better choise considering the posterior distribution of the models. 
+this analysis shows that the second model is extremely better in a Bayesian sense respect to the Normal model: this is clear when we think that the Normal model gives a lot of importance to the sample data also if the sample is extremely small and the sampling distribution has nothing in common with a Normal; instead with a small sample a Uniform distribution is a better choice considering the posterior distribution of the models. 
 
 
 
